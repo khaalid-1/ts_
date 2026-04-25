@@ -11,19 +11,7 @@ export const validate = (schema: ZodType<any,any,any>) => {
       });
       return next();
     } catch (error: any) {
-      if (error instanceof ZodError) {
-        return res.status(400).json({
-          status: false,
-          error: error.issues.map((e) => ({
-            filed: e.path[e.path.length - 1],
-            message: e.message,
-          })),
-        });
-      }
-      return res.status(500).json({
-        status: false,
-        error: "Internal Server Error",
-      });
+      next(error);
     }
   };
 };
