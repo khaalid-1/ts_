@@ -8,11 +8,13 @@ import {
 } from "../controller/task.controller";
 import { DEFAULT_CIPHERS } from "node:tls";
 import { validate } from "../middleware/validate";
-import { createTaskSchema, deleteTaskSchema, paramTaskSchema, updateTaskSchema } from "../validator/validator";
+import { createTaskSchema, deleteTaskSchema, getAllTaskSchema, paramTaskSchema, updateTaskSchema } from "../validator/validator";
 
 const router = Router();
 
-router.route("/").get(getAllTask).post(validate(createTaskSchema), createTask);
+router.route("/")
+.get(validate(getAllTaskSchema),getAllTask)
+.post(validate(createTaskSchema), createTask);
 router
   .route("/:id")
   .get(validate(paramTaskSchema), getTask)

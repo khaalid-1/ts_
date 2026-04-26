@@ -41,3 +41,13 @@ export const deleteTaskSchema = z.object({
   }),
   params: paramid,
 });
+
+
+export const getAllTaskSchema = z.object({
+  query:z.object({
+    page:z.coerce.number().int().default(1).optional(),
+    limit:z.coerce.number().int().min(10).max(100).optional(),
+    status:z.enum(['todos','inProgress','done']).optional(),
+    search:z.string().optional()
+  })
+})

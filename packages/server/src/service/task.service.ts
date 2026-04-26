@@ -10,8 +10,34 @@ export const taskService = {
     if (!userId) throw new AppError("userId is required", 404);
     return taskRepo.create(title, userId);
   },
-  getAllTask: async () => {
-    return taskRepo.getAll();
+  getAllTask: async ( page:number,limit:number,status:string,search:string) => {
+    const skip = (page - 1) * limit;
+    const filters: any = {}
+    if(status) filters.status = status;
+    if(search){
+      filters.title={
+        contains:search
+      }
+    }
+    const [tasks,taskItems] = await Promise.all([
+      taskRepo.getAll(filters,skip,limit),
+      taskRepo.countAll(filters)
+    ])
+
+    const totalPage = Math.ceil(taskItems / limit);
+
+    if(page > totalPage && taskItems > 0){
+      throw new AppError(`page ${page} not found `,404);
+    }
+    return {
+      tasks,
+      pagination:{
+        totalPage,
+        currentPage:page,
+        totalItem : limit,
+        nextPage : page > totalPage ? page + 1 : 0
+      }
+    }
   },
   getTask: async (id: number) => {
     if (!id) throw new AppError("id is required", 404);
