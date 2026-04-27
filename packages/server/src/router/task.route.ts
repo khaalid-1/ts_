@@ -9,15 +9,16 @@ import {
 import { DEFAULT_CIPHERS } from "node:tls";
 import { validate } from "../middleware/validate";
 import { createTaskSchema, deleteTaskSchema, getAllTaskSchema, paramTaskSchema, updateTaskSchema } from "../validator/validator";
+import { appRateLimit } from "../middleware/rateLimit";
 
 const router = Router();
 
 router.route("/")
-.get(validate(getAllTaskSchema),getAllTask)
+.get(validate(getAllTaskSchema),appRateLimit,getAllTask)
 .post(validate(createTaskSchema), createTask);
 router
   .route("/:id")
-  .get(validate(paramTaskSchema), getTask)
+  .get(validate(paramTaskSchema),appRateLimit, getTask)
   .patch(validate(updateTaskSchema),updateTask)
   .delete(validate(deleteTaskSchema), deleteTask);
 
