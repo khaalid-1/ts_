@@ -10,9 +10,10 @@ import { DEFAULT_CIPHERS } from "node:tls";
 import { validate } from "../middleware/validate";
 import { createTaskSchema, deleteTaskSchema, getAllTaskSchema, paramTaskSchema, updateTaskSchema } from "../validator/validator";
 import { appRateLimit } from "../middleware/rateLimit";
+import { protect } from "../middleware/protect";
 
 const router = Router();
-
+router.use(protect);
 router.route("/")
 .get(validate(getAllTaskSchema),appRateLimit,getAllTask)
 .post(validate(createTaskSchema), createTask);

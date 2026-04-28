@@ -10,9 +10,9 @@ export const taskRepo = {
       },
     });
   },
-  getAll: async (filters:any, skip:number,take:number) => {
+  getAll: async (filters:any, skip:number,take:number,userId:number) => {
     return await prisma.task.findMany({
-        where:filters,
+        where:{...filters,userId},
       skip,
       take,
       select: {

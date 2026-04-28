@@ -10,7 +10,7 @@ export const taskService = {
     if (!userId) throw new AppError("userId is required", 404);
     return taskRepo.create(title, userId);
   },
-  getAllTask: async ( page:number,limit:number,status:string,search:string) => {
+  getAllTask: async ( page:number,limit:number,status:string,search:string,userId:number) => {
     const skip = (page - 1) * limit;
     const filters: any = {}
     if(status) filters.status = status;
@@ -20,7 +20,7 @@ export const taskService = {
       }
     }
     const [tasks,taskItems] = await Promise.all([
-      taskRepo.getAll(filters,skip,limit),
+      taskRepo.getAll(filters,skip,limit,userId),
       taskRepo.countAll(filters)
     ])
 

@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import { taskService } from "../service/task.service";
 import { catchAsync } from "../utils/catchAsync";
+import { number } from "zod";
 
 export const createTask = catchAsync(async (req: Request, res: Response) => {
   if (!req.body) {
@@ -10,7 +11,8 @@ export const createTask = catchAsync(async (req: Request, res: Response) => {
     });
   }
 
-  const { title, userId } = req.body;
+  const { title } = req.body;
+  const userId = req.user.id ;
 
   const task = await taskService.createTask(title, userId);
 
@@ -26,7 +28,8 @@ export const getAllTask = catchAsync(async (req: Request, res: Response) => {
   const limit = Number(req.query.limit) || 10;
   const status = req.query.status;
   const search = req.query.search;
-  const tasks = await taskService.getAllTask(page,limit,status as string,search as string);
+  const userId = req.user.id;
+  const tasks = await taskService.getAllTask(page,limit,status as string,search as string,userId);
 
   return res.status(200).json({
     status: false,
